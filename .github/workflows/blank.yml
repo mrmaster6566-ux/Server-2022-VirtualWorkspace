@@ -1,4 +1,4 @@
-name: Windows Server 2022 Workspace (CMD)
+name: Personal Cloud Workspace (BY DANIEL 64) 
 
 on:
   workflow_dispatch:
@@ -43,7 +43,7 @@ jobs:
           "%USERPROFILE%\tailscale-setup.exe" /quiet
 
           echo ⏳ Waiting 20 seconds for Tailscale services to initialize...
-          timeout /t 20 /nobreak >nul
+          timeout /t 20 /nobreak
 
           echo 🔍 Detecting installed Tailscale path...
           if exist "%ProgramFiles%\Tailscale\tailscale.exe" (
@@ -72,13 +72,16 @@ jobs:
           echo.
           echo 🌐 Tailscale hostname: windows2022-workspace
           echo -----------------------------------------------
-          echo 🌟🧸 MADE BY DANIEL 64
+          echo 🌟🐻🧸 MADE BY DANIEL 64
           echo ===============================================
 
-      - name: ⏳ Workspace Keep-Alive
+      - name: ⏳ Display Minsk Time and Keep-Alive Loop
         shell: cmd
         run: |
-          :loop
+          powershell -Command "$tz = [System.TimeZoneInfo]::FindSystemTimeZoneById('FLE Standard Time'); $endTime = [System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId((Get-Date).AddHours(6), $tz.Id); Write-Host '🕐 Workspace will remain active until (Minsk time):', $endTime"
+
           echo Enjoy!
-          timeout /t 10 /nobreak >nul
+          @echo off
+          :loop
+          timeout /t 10 /nobreak
           goto loop
