@@ -1,4 +1,4 @@
-name: Personal Cloud Workspace (BY DANIEL 64) 
+name: Windows Server 2022 Workspace (CMD)
 
 on:
   workflow_dispatch:
@@ -43,7 +43,7 @@ jobs:
           "%USERPROFILE%\tailscale-setup.exe" /quiet
 
           echo ⏳ Waiting 20 seconds for Tailscale services to initialize...
-          timeout /t 20 /nobreak
+          timeout 20
 
           echo 🔍 Detecting installed Tailscale path...
           if exist "%ProgramFiles%\Tailscale\tailscale.exe" (
@@ -72,7 +72,7 @@ jobs:
           echo.
           echo 🌐 Tailscale hostname: windows2022-workspace
           echo -----------------------------------------------
-          echo 🌟🐻🧸 MADE BY DANIEL 64
+          echo 🌟 MADE BY DANIEL 64
           echo ===============================================
 
       - name: ⏳ Display Minsk Time and Keep-Alive Loop
@@ -83,5 +83,5 @@ jobs:
           echo Enjoy!
           @echo off
           :loop
-          timeout /t 10 /nobreak
+          timeout 10
           goto loop
