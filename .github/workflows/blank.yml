@@ -33,13 +33,24 @@ jobs:
 
       - name: 🌐 Install and Configure Tailscale
         run: |
-          Write-Host "🔧 Downloading and installing Tailscale..."
+          Write-Host "🔧 Downloading Tailscale installer..."
           powershell -Command "Invoke-WebRequest -Uri 'https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe' -OutFile '$env:USERPROFILE\\tailscale-setup.exe'"
+
+          Write-Host "💻 Installing Tailscale silently..."
           & "$env:USERPROFILE\tailscale-setup.exe" /quiet
-          Write-Host "✅ Tailscale installed."
+
+          Write-Host "🔍 Detecting installed Tailscale path..."
+          if (Test-Path "$env:ProgramFiles\Tailscale\tailscale.exe") {
+              $tailscalePath = "$env:ProgramFiles\Tailscale\tailscale.exe"
+          } elseif (Test-Path "$env:ProgramFiles(x86)\Tailscale\tailscale.exe") {
+              $tailscalePath = "$env:ProgramFiles(x86)\Tailscale\tailscale.exe"
+          } else {
+              Write-Host "❌ Tailscale executable not found!"
+              exit 1
+          }
 
           Write-Host "🔗 Starting Tailscale for secure remote access..."
-          & "$env:ProgramFiles\Tailscale\tailscale.exe" up --hostname=windows2022-workspace
+          & $tailscalePath up --hostname=windows2022-workspace
           Write-Host "✅ Tailscale is running."
 
       - name: 💬 Display Workspace Info
@@ -54,7 +65,7 @@ jobs:
           Write-Host ""
           Write-Host "🌐 Tailscale hostname: windows2022-workspace"
           Write-Host "-----------------------------------------------"
-          Write-Host "🌟 MADE BY DANIEL 64"
+          Write-Host "🌟🐻🧸 MADE BY DANIEL 64"
           Write-Host "==============================================="
 
       - name: ⏳ Workspace End Time and 6-Hour Active Session
