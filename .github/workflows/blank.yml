@@ -36,11 +36,13 @@ jobs:
         shell: cmd
         run: |
           echo 🔧 Downloading and installing Tailscale...
-          powershell -Command "Invoke-WebRequest -Uri 'https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe' -OutFile '%USERPROFILE%\\tailscale.exe'"
-          "%USERPROFILE%\\tailscale.exe" /quiet
+          powershell -Command "Invoke-WebRequest -Uri 'https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe' -OutFile '%USERPROFILE%\\tailscale-setup.exe'"
+          "%USERPROFILE%\\tailscale-setup.exe" /quiet
+          echo ✅ Tailscale installed.
+
           echo 🔗 Starting Tailscale for secure remote access...
-          tailscale up --hostname=windows2022-workspace
-          echo ✅ Tailscale setup complete.
+          "%ProgramFiles%\Tailscale\tailscale.exe" up --hostname=windows2022-workspace
+          echo ✅ Tailscale is running.
 
       - name: 💬 Display Workspace Info
         run: |
@@ -54,7 +56,7 @@ jobs:
           echo
           echo 🌐 Tailscale hostname: windows2022-workspace
           echo -----------------------------------------------
-          echo 🌟 MADE BY DANIEL 64
+          echo 🌟🧸🐻 MADE BY DANIEL 64
           echo ===============================================
 
       - name: ⏳ Workspace End Time and 6-Hour Active Session
