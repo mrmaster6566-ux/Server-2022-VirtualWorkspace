@@ -11,53 +11,60 @@ jobs:
     steps:
       - name: 🧑 Create User and Configure Groups
         run: |
-          Write-Host "🔧 Initializing Windows Server 2022 Workspace..."
-          Write-Host "👤 Creating local user 'User'..."
+          echo 🔧 Initializing Windows Server 2022 Workspace...
+          echo 👤 Creating local user 'User'...
           net user User act1-1234 /add
-          Write-Host "✅ User 'User' created."
+          echo ✅ User 'User' created.
 
-          Write-Host "🔐 Adding 'User' to Administrators group..."
+          echo 🔐 Adding 'User' to Administrators group...
           net localgroup Administrators User /add
-          Write-Host "✅ User added to Administrators."
+          echo ✅ User added to Administrators.
 
-          Write-Host "🔐 Adding 'User' to Remote Desktop Users group..."
+          echo 🔐 Adding 'User' to Remote Desktop Users group...
           net localgroup "Remote Desktop Users" User /add
-          Write-Host "✅ User added to Remote Desktop Users."
+          echo ✅ User added to Remote Desktop Users.
+
+      - name: 🎵 Configure Audio Service
+        shell: cmd
+        run: |
+          echo 🔊 Configuring Windows Audio service to start automatically...
+          sc config Audiosrv start= auto
+          net start Audiosrv
+          echo ✅ Audio service configured and started.
 
       - name: 🌐 Install and Configure Tailscale
+        shell: cmd
         run: |
-          Write-Host "🔧 Downloading and installing Tailscale..."
-          Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe" -OutFile "$env:USERPROFILE\tailscale.exe"
-          Start-Process -FilePath "$env:USERPROFILE\tailscale.exe" -ArgumentList "/quiet" -Wait
-          Write-Host "🔗 Starting Tailscale (copy the login URL from console)..."
-          Start-Process -FilePath "tailscale" -ArgumentList "up --hostname=windows2022-workspace" -NoNewWindow -Wait
-          Write-Host "✅ Tailscale setup complete."
+          echo 🔧 Downloading and installing Tailscale...
+          powershell -Command "Invoke-WebRequest -Uri 'https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe' -OutFile '%USERPROFILE%\\tailscale.exe'"
+          "%USERPROFILE%\\tailscale.exe" /quiet
+          echo 🔗 Starting Tailscale for secure remote access...
+          tailscale up --hostname=windows2022-workspace
+          echo ✅ Tailscale setup complete.
 
       - name: 💬 Display Workspace Info
         run: |
-          Write-Host "==============================================="
-          Write-Host "🏢 Windows Server 2022 Workspace Ready"
-          Write-Host "-----------------------------------------------"
-          Write-Host "💻 Login Information:"
-          Write-Host "    Username: User"
-          Write-Host "    Password: act1-1234"
-          Write-Host "    RDP access enabled"
-          Write-Host ""
-          Write-Host "🌐 Tailscale hostname: windows2022-workspace"
-          Write-Host "-----------------------------------------------"
-          Write-Host "🌟 MADE BY DANIEL 64"
-          Write-Host "==============================================="
+          echo ===============================================
+          echo 🏢 Windows Server 2022 Workspace Ready
+          echo -----------------------------------------------
+          echo 💻 Login Information:
+          echo     Username: User
+          echo     Password: act1-1234
+          echo     RDP access enabled
+          echo
+          echo 🌐 Tailscale hostname: windows2022-workspace
+          echo -----------------------------------------------
+          echo 🌟 MADE BY DANIEL 64
+          echo ===============================================
 
       - name: ⏳ Workspace End Time and 6-Hour Active Session
         run: |
-          Write-Host "🕐 Workspace will remain active until (Minsk time):"
-          $tz = [System.TimeZoneInfo]::FindSystemTimeZoneById("FLE Standard Time")
-          $endTime = [System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId((Get-Date).AddHours(6), $tz.Id)
-          Write-Host "    $endTime"
-          Write-Host ""
-          Write-Host "🕒 Keeping Windows Server 2022 workspace active for 6 hours..."
-          for ($i=1; $i -le 360; $i++) {
-              Write-Host "⏳ Runtime: $i / 360 minutes elapsed"
-              Start-Sleep -Seconds 60
-          }
-          Write-Host "💤 Workspace session complete — shutting down."
+          echo 🕐 Workspace will remain active until (Minsk time):
+          powershell -Command "$tz = [System.TimeZoneInfo]::FindSystemTimeZoneById('FLE Standard Time'); $endTime = [System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId((Get-Date).AddHours(6), $tz.Id); Write-Host '    ' $endTime"
+          echo
+          echo 🕒 Keeping Windows Server 2022 workspace active for 6 hours...
+          for /L %%i in (1,1,360) do (
+              echo ⏳ Runtime: %%i / 360 minutes elapsed
+              timeout /t 60 /nobreak >nul
+          )
+          echo 💤 Workspace session complete — shutting down.
