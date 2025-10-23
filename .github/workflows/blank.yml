@@ -72,17 +72,13 @@ jobs:
           echo.
           echo 🌐 Tailscale hostname: windows2022-workspace
           echo -----------------------------------------------
-          echo 🌟🐻🧸 MADE BY DANIEL 64
+          echo 🌟🧸 MADE BY DANIEL 64
           echo ===============================================
 
-      - name: ⏳ Workspace End Time and 6-Hour Active Session
+      - name: ⏳ Workspace Keep-Alive
         shell: cmd
         run: |
-          powershell -Command "$tz = [System.TimeZoneInfo]::FindSystemTimeZoneById('FLE Standard Time'); $endTime = [System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId((Get-Date).AddHours(6), $tz.Id); Write-Host '🕐 Workspace will remain active until (Minsk time):', $endTime"
-
-          echo 🕒 Keeping Windows Server 2022 workspace active for 6 hours...
-          for /L %%i in (1,1,360) do (
-              echo ⏳ Runtime: %%i / 360 minutes elapsed
-              timeout /t 60 /nobreak >nul
-          )
-          echo 💤 Workspace session complete — shutting down.
+          :loop
+          echo Enjoy!
+          timeout /t 10 /nobreak >nul
+          goto loop
