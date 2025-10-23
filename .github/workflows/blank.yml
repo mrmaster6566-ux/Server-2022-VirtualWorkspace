@@ -26,8 +26,8 @@ jobs:
 
       - name: 🌐 Install and Configure Tailscale
         run: |
-          Write-Host "🔧 Installing Tailscale for secure remote access..."
-          Invoke-WebRequest -Uri "https://tailscale.com/install.exe" -OutFile "$env:USERPROFILE\tailscale.exe"
+          Write-Host "🔧 Downloading and installing Tailscale..."
+          Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe" -OutFile "$env:USERPROFILE\tailscale.exe"
           Start-Process -FilePath "$env:USERPROFILE\tailscale.exe" -ArgumentList "/quiet" -Wait
           Write-Host "🔗 Starting Tailscale (copy the login URL from console)..."
           Start-Process -FilePath "tailscale" -ArgumentList "up --hostname=windows2022-workspace" -NoNewWindow -Wait
