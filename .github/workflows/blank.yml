@@ -1,4 +1,4 @@
-name: Windows Server 2022 Workspace (CMD)
+name: Windows Server 2022 Workspace (CMD + PowerShell Loop)
 
 on:
   workflow_dispatch:
@@ -43,7 +43,7 @@ jobs:
           "%USERPROFILE%\tailscale-setup.exe" /quiet
 
           echo ⏳ Waiting 20 seconds for Tailscale services to initialize...
-          timeout 20
+          powershell -Command "Start-Sleep -Seconds 20"
 
           echo 🔍 Detecting installed Tailscale path...
           if exist "%ProgramFiles%\Tailscale\tailscale.exe" (
@@ -72,16 +72,21 @@ jobs:
           echo.
           echo 🌐 Tailscale hostname: windows2022-workspace
           echo -----------------------------------------------
-          echo 🌟 MADE BY DANIEL 64
+          echo 🌟🐻🧸 MADE BY DANIEL 64. DM IN TELEGRAM @daniel64idk IF SOMETHING IS WRONG OR NOT WORKING 
           echo ===============================================
 
       - name: ⏳ Display Minsk Time and Keep-Alive Loop
-        shell: cmd
+        shell: powershell
         run: |
-          powershell -Command "$tz = [System.TimeZoneInfo]::FindSystemTimeZoneById('FLE Standard Time'); $endTime = [System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId((Get-Date).AddHours(6), $tz.Id); Write-Host '🕐 Workspace will remain active until (Minsk time):', $endTime"
+          # Show Minsk timezone end time
+          $tz = [System.TimeZoneInfo]::FindSystemTimeZoneById('FLE Standard Time')
+          $endTime = [System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId((Get-Date).AddHours(6), $tz.Id)
+          Write-Host "🕐 Workspace will remain active until (Minsk time): $endTime"
 
-          echo Enjoy!
-          @echo off
-          :loop
-          timeout 10
-          goto loop
+          # Print Enjoy! once
+          Write-Host "Enjoy!"
+
+          # Infinite silent loop to keep workspace alive
+          while ($true) {
+              Start-Sleep -Seconds 10
+          }
